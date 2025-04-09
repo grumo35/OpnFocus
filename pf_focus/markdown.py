@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from pf_focus.pfsense import PfSenseNode, PfSenseRuleAlias, PfSenseRuleInterface, PfSenseRuleLocation
-from pf_focus.util import dict_to_list, obj_to_dict, obj_to_list, hasattr_r
+from opn_focus.OPNsense import OPNsenseNode, OPNsenseRuleAlias, OPNsenseRuleInterface, OPNsenseRuleLocation
+from opn_focus.util import dict_to_list, obj_to_dict, obj_to_list, hasattr_r
 
 
 def format_rule_interface(rule_interface):
@@ -28,20 +28,20 @@ def format_rule_alias(rule_alias):
     return str(rule_alias)
 
 def format_rule_location(rule_location):
-    if isinstance(rule_location, PfSenseRuleAlias):
+    if isinstance(rule_location, OPNsenseRuleAlias):
         rule_location = format_rule_alias(rule_location.data)
     return str(rule_location)
 
 def format_markdown_cell(cell):
-    if cell is None or (isinstance(cell, PfSenseNode) and cell.data is None):
+    if cell is None or (isinstance(cell, OPNsenseNode) and cell.data is None):
         cell = ''
-    elif cell is True or (isinstance(cell, PfSenseNode) and cell.data is True):
+    elif cell is True or (isinstance(cell, OPNsenseNode) and cell.data is True):
         cell = 'x'
-    elif isinstance(cell, PfSenseRuleAlias):
+    elif isinstance(cell, OPNsenseRuleAlias):
         cell = format_rule_alias(cell.data)
-    elif isinstance(cell, PfSenseRuleInterface):
+    elif isinstance(cell, OPNsenseRuleInterface):
         cell = format_rule_interface(cell.data)
-    elif isinstance(cell, PfSenseRuleLocation):
+    elif isinstance(cell, OPNsenseRuleLocation):
         if hasattr(cell, 'not'):
             data = '**!** '
         else:
@@ -74,54 +74,54 @@ def output_markdown_table(stream, header, rows):
         stream.write(" |\n")
 
 def output_markdown(doc, stream):
-    stream.write("# pfSense\n")
-    stream.write("Version {}\n".format(doc.pfsense.version))
+    stream.write("# OPNsense\n")
+    stream.write("Version {}\n".format(doc.OPNsense.version))
     stream.write("\n")
 
     stream.write("## System\n")
-    info = obj_to_dict(doc.pfsense.system, ('hostname', 'domain', 'timeservers', 'timezone', 'language', 'dnsserver'))
+    info = obj_to_dict(doc.OPNsense.system, ('hostname', 'domain', 'timeservers', 'timezone', 'language', 'dnsserver'))
     info['dnsserver'] = ', '.join(map(format_markdown_cell, info['dnsserver']))
     output_markdown_table(stream, ('Option', 'Value'), info.items())
     stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'interfaces'):
+    if hasattr_r(doc.OPNsense, 'interfaces'):
         stream.write("## Interfaces\n")
-        interfaces = sorted(doc.pfsense.interfaces.data.items(), key=lambda interface: interface[0])
+        interfaces = sorted(doc.OPNsense.interfaces.data.items(), key=lambda interface: interface[0])
         interfaces = [[interface_name]+dict_to_list(interface_data, ('enable', 'descr', 'if', 'ipaddr', 'subnet')) for interface_name, interface_data in interfaces]
         output_markdown_table(stream, ('Name', 'Enabled', 'Description', 'Interface', 'Address', 'Subnet'), interfaces)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'vlans.vlan'):
+    if hasattr_r(doc.OPNsense, 'vlans.vlan'):
         stream.write("## VLANs\n")
-        vlans = [obj_to_list(vlan, ('vlanif', 'tag', 'if', 'descr')) for vlan in doc.pfsense.vlans.vlan]
+        vlans = [obj_to_list(vlan, ('vlanif', 'tag', 'if', 'descr')) for vlan in doc.OPNsense.vlans.vlan]
         output_markdown_table(stream, ('Name', 'Tag', 'Interface', 'Description'), vlans)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'bridges.bridged'):
+    if hasattr_r(doc.OPNsense, 'bridges.bridged'):
         stream.write("## Bridges\n")
-        bridges = [obj_to_list(bridge, ('bridgeif', 'members', 'descr')) for bridge in doc.pfsense.bridges.bridged]
+        bridges = [obj_to_list(bridge, ('bridgeif', 'members', 'descr')) for bridge in doc.OPNsense.bridges.bridged]
         output_markdown_table(stream, ('Name', 'Members', 'Description'), bridges)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'gateways.gateway_item'):
+    if hasattr_r(doc.OPNsense, 'gateways.gateway_item'):
         stream.write("## Gateways\n")
-        gateways = [obj_to_list(gateway, ('defaultgw', 'name', 'interface', 'gateway', 'weight', 'ipprotocol', 'descr')) for gateway in doc.pfsense.gateways.gateway_item]
+        gateways = [obj_to_list(gateway, ('defaultgw', 'name', 'interface', 'gateway', 'weight', 'ipprotocol', 'descr')) for gateway in doc.OPNsense.gateways.gateway_item]
         output_markdown_table(stream, ('Default', 'Name', 'Interface', 'Gateway', 'Weight', 'IP', 'Description'), gateways)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'staticroutes.route'):
+    if hasattr_r(doc.OPNsense, 'staticroutes.route'):
         stream.write("## Static routes\n")
-        routes = [obj_to_list(route, ('network', 'gateway', 'descr')) for route in doc.pfsense.staticroutes.route]
+        routes = [obj_to_list(route, ('network', 'gateway', 'descr')) for route in doc.OPNsense.staticroutes.route]
         output_markdown_table(stream, ('Network', 'Gateway', 'Description'), routes)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'dhcpd'):
+    if hasattr_r(doc.OPNsense, 'dhcpd'):
         stream.write("## DHCP ranges\n")
-        for dhcpd_interface_name in sorted(doc.pfsense.dhcpd.data.keys()):
-            dhcpd_interface = PfSenseRuleInterface(parent=doc.pfsense.dhcpd)
+        for dhcpd_interface_name in sorted(doc.OPNsense.dhcpd.data.keys()):
+            dhcpd_interface = OPNsenseRuleInterface(parent=doc.OPNsense.dhcpd)
             dhcpd_interface.string = dhcpd_interface_name
             stream.write("### DHCPd configuration for {}\n".format(format_markdown_cell(dhcpd_interface)))
-            dhcpd = getattr(doc.pfsense.dhcpd, dhcpd_interface_name)
+            dhcpd = getattr(doc.OPNsense.dhcpd, dhcpd_interface_name)
             dhcpd_dict = obj_to_dict(dhcpd, ('enable', 'defaultleasetime', 'maxleasetime'))
             output_markdown_table(stream, ('Option', 'Value'), dhcpd_dict.items())
             stream.write("\n")
@@ -137,84 +137,84 @@ def output_markdown(doc, stream):
                 stream.write("\n")
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'aliases.alias'):
+    if hasattr_r(doc.OPNsense, 'aliases.alias'):
         stream.write("## Aliases\n")
-        aliases = [obj_to_list(alias, ('name', 'type', 'address', 'descr', 'detail')) for alias in doc.pfsense.aliases.alias]
+        aliases = [obj_to_list(alias, ('name', 'type', 'address', 'descr', 'detail')) for alias in doc.OPNsense.aliases.alias]
         output_markdown_table(stream, ('Name', 'Type', 'Address', 'Description', 'Detail'), aliases)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'nat.rule'):
+    if hasattr_r(doc.OPNsense, 'nat.rule'):
         stream.write("## NAT rules\n")
-        rules = [obj_to_list(rule, ('disabled', 'interface', 'source', 'destination', 'protocol', 'target', 'local_port', 'descr')) for rule in doc.pfsense.nat.rule]
+        rules = [obj_to_list(rule, ('disabled', 'interface', 'source', 'destination', 'protocol', 'target', 'local_port', 'descr')) for rule in doc.OPNsense.nat.rule]
         output_markdown_table(stream, ('Disabled', 'Interface', 'Source', 'Destination', 'Protocol', 'Target', 'Local port', 'Description'), rules)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'nat.outbound.rule'):
+    if hasattr_r(doc.OPNsense, 'nat.outbound.rule'):
         stream.write("## Outbound NAT rules\n")
-        rules = [obj_to_list(rule, ('disabled', 'interface', 'source', 'destination', 'dstport', 'protocol', 'target', 'descr')) for rule in doc.pfsense.nat.outbound.rule]
+        rules = [obj_to_list(rule, ('disabled', 'interface', 'source', 'destination', 'dstport', 'protocol', 'target', 'descr')) for rule in doc.OPNsense.nat.outbound.rule]
         output_markdown_table(stream, ('Disabled', 'Interface', 'Source', 'Destination', 'Destination port', 'Protocol', 'Target', 'Description'), rules)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'filter.rule'):
+    if hasattr_r(doc.OPNsense, 'filter.rule'):
         stream.write("## Filter rules\n")
-        rules = [obj_to_list(rule, ('disabled', 'interface', 'type', 'ipprotocol', 'protocol', 'source', 'destination', 'descr')) for rule in doc.pfsense.filter.rule]
+        rules = [obj_to_list(rule, ('disabled', 'interface', 'type', 'ipprotocol', 'protocol', 'source', 'destination', 'descr')) for rule in doc.OPNsense.filter.rule]
         output_markdown_table(stream, ('Disabled', 'Interface', 'Type', 'IP', 'Protocol', 'Source', 'Destination', 'Description'), rules)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'dnsmasq'):
+    if hasattr_r(doc.OPNsense, 'dnsmasq'):
         stream.write("## DNSmasq configuration\n")
-        dnsmasq = obj_to_dict(doc.pfsense.dnsmasq, ('enable', 'regdhcp', 'regdhcpstatic', 'strict_order', 'custom_options', 'interface'))
+        dnsmasq = obj_to_dict(doc.OPNsense.dnsmasq, ('enable', 'regdhcp', 'regdhcpstatic', 'strict_order', 'custom_options', 'interface'))
         output_markdown_table(stream, ('Option', 'Value'), dnsmasq.items())
         stream.write("\n")
-        if hasattr_r(doc.pfsense.dnsmasq, 'hosts'):
+        if hasattr_r(doc.OPNsense.dnsmasq, 'hosts'):
             stream.write("### Host overrides\n")
-            hosts = [obj_to_dict(host, ('host', 'domain', 'ip', 'descr', 'aliases')) for host in doc.pfsense.dnsmasq.hosts]
+            hosts = [obj_to_dict(host, ('host', 'domain', 'ip', 'descr', 'aliases')) for host in doc.OPNsense.dnsmasq.hosts]
             hostlists = [[host] + list(map(lambda item: (setattr(item, 'ip', host['ip']),
                                                          setattr(item, 'descr', item.description), item.data)[-1],
                                            getattr(host['aliases'], 'item', []))) for host in hosts]
             hosts = [dict_to_list(host, ('host', 'domain', 'ip', 'descr')) for hostlist in hostlists for host in hostlist]
             output_markdown_table(stream, ('Host', 'Domain', 'IP', 'Description'), hosts)
             stream.write("\n")
-        if hasattr_r(doc.pfsense.dnsmasq, 'domainoverrides'):
+        if hasattr_r(doc.OPNsense.dnsmasq, 'domainoverrides'):
             stream.write("### Domain overrides\n")
-            domains = [obj_to_list(domain, ('domain', 'ip', 'descr')) for domain in doc.pfsense.dnsmasq.domainoverrides]
+            domains = [obj_to_list(domain, ('domain', 'ip', 'descr')) for domain in doc.OPNsense.dnsmasq.domainoverrides]
             output_markdown_table(stream, ('Domain', 'IP', 'Description'), domains)
             stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'openvpn.openvpn_server'):
+    if hasattr_r(doc.OPNsense, 'openvpn.openvpn_server'):
         stream.write("## OpenVPN servers\n")
         openvpn_servers = [obj_to_dict(openvpn_server, ('vpnid', 'mode', 'authmode', 'protocol', 'dev_mode', 'interface', 'ipaddr', 'local_port',
                                                         'crypto', 'digest', 'tunnel_network', 'remote_network', 'local_network', 'dynamic_ip', 'pool_enable',
-                                                        'topology', 'description', 'custom_options')) for openvpn_server in doc.pfsense.openvpn.openvpn_server]
+                                                        'topology', 'description', 'custom_options')) for openvpn_server in doc.OPNsense.openvpn.openvpn_server]
         for openvpn_server in openvpn_servers:
             stream.write("### {}\n".format(format_markdown_cell(openvpn_server['description'])))
             output_markdown_table(stream, ('Option', 'Value'), openvpn_server.items())
             stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'openvpn.openvpn_client'):
+    if hasattr_r(doc.OPNsense, 'openvpn.openvpn_client'):
         stream.write("## OpenVPN clients\n")
         openvpn_clients = [obj_to_dict(openvpn_client, ('vpnid', 'auth_user', 'mode', 'protocol', 'dev_mode', 'interface', 'ipaddr', 'local_port',
                                                         'server_addr', 'server_port', 'crypto', 'digest', 'tunnel_network', 'remote_network', 'local_network',
-                                                        'topology', 'description', 'custom_options')) for openvpn_client in doc.pfsense.openvpn.openvpn_client]
+                                                        'topology', 'description', 'custom_options')) for openvpn_client in doc.OPNsense.openvpn.openvpn_client]
         for openvpn_client in openvpn_clients:
             stream.write("### {}\n".format(format_markdown_cell(openvpn_client['description'])))
             output_markdown_table(stream, ('Option', 'Value'), openvpn_client.items())
             stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'openvpn.openvpn_csc'):
+    if hasattr_r(doc.OPNsense, 'openvpn.openvpn_csc'):
         stream.write("## OpenVPN client specific overrides\n")
-        cscs = [obj_to_list(csc, ('server_list', 'common_name', 'description', 'tunnel_network')) for csc in doc.pfsense.openvpn.openvpn_csc]
+        cscs = [obj_to_list(csc, ('server_list', 'common_name', 'description', 'tunnel_network')) for csc in doc.OPNsense.openvpn.openvpn_csc]
         output_markdown_table(stream, ('VPN IDs', 'Common Name', 'Description', 'Tunnel Network'), cscs)
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'syslog'):
+    if hasattr_r(doc.OPNsense, 'syslog'):
         stream.write("## Syslog configuration\n")
-        syslog = obj_to_dict(doc.pfsense.syslog, ('enable', 'logall', 'logfilesize', 'nentries', 'remoteserver', 'remoteserver2', 'remoteserver3', 'sourceip', 'ipproto'))
+        syslog = obj_to_dict(doc.OPNsense.syslog, ('enable', 'logall', 'logfilesize', 'nentries', 'remoteserver', 'remoteserver2', 'remoteserver3', 'sourceip', 'ipproto'))
         output_markdown_table(stream, ('Option', 'Value'), syslog.items())
         stream.write("\n")
 
-    if hasattr_r(doc.pfsense, 'sysctl.item'):
+    if hasattr_r(doc.OPNsense, 'sysctl.item'):
         stream.write("## System tunables\n")
-        tunables = [obj_to_list(tunable, ('tunable', 'value', 'descr')) for tunable in doc.pfsense.sysctl.item]
+        tunables = [obj_to_list(tunable, ('tunable', 'value', 'descr')) for tunable in doc.OPNsense.sysctl.item]
         output_markdown_table(stream, ('Name', 'Value', 'Description'), tunables)
         stream.write("\n")
