@@ -12,15 +12,15 @@ def read_file(filename):
         return ''
 
 setup(
-    name='pfFocus',
+    name='opnFocus',
     version='0.1',
-    description='Generate meaningful output from your pfSense configuration backup',
+    description='Generate meaningful output from your opnSense configuration backup',
     long_description=read_file('README.md'),
     long_description_content_type='text/markdown',
-    author='thyssenkrupp CERT',
+    author='thyssenkrupp CERT forked by grumo',
     author_email='tkag-cert@thyssenkrupp.com',
     license='GPL-V3',
-    url='https://github.com/TKCERT/pfFocus',
+    url='https://github.com/grumo35/opnFocus',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: System Administrators',
@@ -34,20 +34,20 @@ setup(
         'Topic :: Text Editors :: Documentation',
         'Topic :: Text Processing'],
     py_modules=[
-        'pf_focus.util',
-        'pf_focus.pfsense',
-        'pf_focus.progress',
-        'pf_focus.parse',
-        'pf_focus.format',
-        'pf_focus.bbcode',
-        'pf_focus.markdown',
+        'opn_focus.util',
+        'opn_focus.opnsense',
+        'opn_focus.progress',
+        'opn_focus.parse',
+        'opn_focus.format',
+        'opn_focus.bbcode',
+        'opn_focus.markdown',
     ],
     entry_points = {
         'console_scripts': [
-            'pf-parse=pf_focus.parse:main',
-            'pf-format=pf_focus.format:main',
-            'pfFocus-parse=pf_focus.parse:main',
-            'pfFocus-format=pf_focus.format:main',
+            'opn-parse=opn_focus.parse:main',
+            'opn-format=opn_focus.format:main',
+            'opnFocus-parse=opn_focus.parse:main',
+            'opnFocus-format=opn_focus.format:main',
         ]
     },
     install_requires=read_file('requirements.txt').splitlines(),
