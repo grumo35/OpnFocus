@@ -75,7 +75,7 @@ def output_markdown_table(stream, header, rows):
 
 def output_markdown(doc, stream):
     stream.write("# OPNsense\n")
-    stream.write("Version {}\n".format(doc.opnsense.version))
+    stream.write("Version")
     stream.write("\n")
 
     stream.write("## System\n")
