@@ -396,7 +396,7 @@ class OPNsenseSystem(OPNsenseNode):
     _dnsserver = [OPNsenseString]
 
 class OPNsenseConfig(OPNsenseNode):
-    _version = OPNsenseString
+#    _version = OPNsenseString
     _system = OPNsenseSystem
     _interfaces = OPNsenseInterfaces
     _vlans = OPNsenseVlans
