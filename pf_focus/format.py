@@ -4,11 +4,11 @@ import sys
 
 import yaml
 
-from pf_focus.markdown import output_markdown
-from pf_focus.bbcode import output_bbcode
-from pf_focus.parse import parse_pfsense
-from pf_focus.pfsense import PfSenseDocument
-from pf_focus.progress import Animation
+from opn_focus.markdown import output_markdown
+from opn_focus.bbcode import output_bbcode
+from opn_focus.parse import parse_opnsense
+from opn_focus.opnsense import OPNsenseDocument
+from opn_focus.progress import Animation
 
 
 def output_yaml(doc, stream):
@@ -38,9 +38,9 @@ def step_parse(args, doc):
     if not args.quiet:
         print('\u268b Parsing "{}" ...'.format(args.input_path), file=sys.stderr)
     with get_progress_animation(args):
-        parse_pfsense(args.input_path, doc)
+        parse_opnsense(args.input_path, doc)
     if not args.quiet:
-        print('\u268d Successfully parsed pfSense config version {}.'.format(doc.pfsense.version), file=sys.stderr)
+        print('\u268d Successfully parsed pfSense config version {}.'.format(doc.opnsense.version), file=sys.stderr)
 
 def step_stdout(args, doc, output_func):
     if not args.quiet:
@@ -62,7 +62,7 @@ def step_file(args, doc, output_func):
 
 def main():
     args = parse_args()
-    doc = PfSenseDocument()
+    doc = OPNsenseDocument()
     output_func = get_output_func(args)
 
     step_parse(args, doc)
