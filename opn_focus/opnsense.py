@@ -79,8 +79,8 @@ class OPNsenseAliasString(OPNsenseString):
     @property
     def data(self):
         data = super().data
-        if hasattr_r(self.rootdoc.OPNsense, 'aliases.alias'):
-            for alias in self.rootdoc.OPNsense.aliases.alias:
+        if hasattr_r(self.rootdoc.opnsense, 'aliases.alias'):
+            for alias in self.rootdoc.opnsense.aliases.alias:
                 if alias.name.string == data:
                     return {'alias': alias.data}
         return data
@@ -130,15 +130,15 @@ class OPNsenseRuleAlias(OPNsenseString):
     @property
     def data(self):
         data = super().data
-        for interface_name, interface_data in self.rootdoc.OPNsense.interfaces.data.items():
+        for interface_name, interface_data in self.rootdoc.opnsense.interfaces.data.items():
             alias_name = data
             if alias_name.endswith('ip'):
                 alias_name = alias_name[:-2]
             if interface_name == alias_name:
                 interface_data['name'] = data
                 return {'interface': interface_data}
-        if hasattr_r(self.rootdoc.OPNsense, 'aliases.alias'):
-            for alias in self.rootdoc.OPNsense.aliases.alias:
+        if hasattr_r(self.rootdoc.opnsense, 'aliases.alias'):
+            for alias in self.rootdoc.opnsense.aliases.alias:
                 if alias.name.string == data:
                     return {'alias': alias.data}
         return data
@@ -152,7 +152,7 @@ class OPNsenseRuleInterface(OPNsenseString):
         data_list = []
         for iface_name in data.split(','):
             found = False
-            for interface_name, interface_data in self.rootdoc.OPNsense.interfaces.data.items():
+            for interface_name, interface_data in self.rootdoc.opnsense.interfaces.data.items():
                 if interface_name == iface_name:
                     interface_data['name'] = iface_name
                     data_list.append({'interface': interface_data})
