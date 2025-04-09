@@ -413,4 +413,4 @@ class OPNsenseConfig(OPNsenseNode):
     _sysctl = OPNsenseSysCtl
 
 class OPNsenseDocument(OPNsenseNode):
-    _OPNsense = OPNsenseConfig
+    _opnsense = OPNsenseConfig
