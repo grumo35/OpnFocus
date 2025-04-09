@@ -58,7 +58,7 @@ class OPNsenseTimestamp(OPNsenseNode):
     datetime = None
 
     def __call__(self, content):
-        self.datetime = datetime.fromtimestamp(timestamp, timezone.utc)
+        self.datetime = datetime.fromtimestamp(float(content), timezone.utc)
 
     @property
     def data(self):
