@@ -7,11 +7,11 @@ from xml.sax import ContentHandler
 
 from defusedxml.sax import parse
 
-from pf_focus.pfsense import PfSenseDocument
-from pf_focus.util import DataList
+from opn_focus.pfsense import OPNsenseDocument
+from opn_focus.util import DataList
 
 
-class PfSenseContentHandler(ContentHandler):
+class OPNsenseContentHandler(ContentHandler):
     def __init__(self, document):
         self.document = document
         self.stack = []
@@ -71,7 +71,7 @@ class PfSenseContentHandler(ContentHandler):
             raise RuntimeError("Pending stack elements")
 
 def parse_pfsense(input_path, document):
-    handler = PfSenseContentHandler(document)
+    handler = OPNsenseContentHandler(document)
     if input_path == '-':
         with sys.stdin as input_file:
             parse(input_file, handler)
@@ -86,7 +86,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    doc = PfSenseDocument()
+    doc = OPNsenseDocument()
     parse_pfsense(args.input_path, doc)
     pprint(doc)
 
