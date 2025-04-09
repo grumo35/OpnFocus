@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from opn_focus.OPNsense import OPNsenseNode, OPNsenseRuleAlias, OPNsenseRuleInterface, OPNsenseRuleLocation
+from opn_focus.opnsense import OPNsenseNode, OPNsenseRuleAlias, OPNsenseRuleInterface, OPNsenseRuleLocation
 from opn_focus.util import dict_to_list, obj_to_dict, obj_to_list, hasattr_r
 
 
