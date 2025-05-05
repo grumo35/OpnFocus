@@ -14,7 +14,7 @@ This simple tool allows you to convert a full configuration backup of a *OPN*Sen
 
 **Before:** Configuration backup as XML
 
-![Configuration backup as XML](screenshots/opnFocus_xml.png)
+![Configuration backup as XML](screenshots/pfFocus_xml.png)
 
 **After:** Markdown documentation
 
