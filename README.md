@@ -1,11 +1,8 @@
-![pfFocus](logos/pfFocus.png)
+![opnFocus](logos/opnFocus.png)
 
-# pfFocus
-
-[![Check](https://github.com/TKCERT/pfFocus/actions/workflows/check.yml/badge.svg)](https://github.com/TKCERT/pfFocus/actions/workflows/check.yml)
-[![Docker](https://github.com/TKCERT/pfFocus/actions/workflows/docker.yml/badge.svg)](https://github.com/TKCERT/pfFocus/actions/workflows/docker.yml)
-
-This simple tool allows you to convert a full configuration backup of a *pf*Sense firewall into some meaningful output format, like Markdown or YAML. It enables you to **focus** on the important parts of your firewall configuration and allows you to get a quick overview of the most important settings.
+# OPNFocus
+Forked from https://github.com/TKCERT/opnFocus/
+This simple tool allows you to convert a full configuration backup of a *OPN*Sense firewall into some meaningful output format, like Markdown or YAML. It enables you to **focus** on the important parts of your firewall configuration and allows you to get a quick overview of the most important settings.
 
 ## Requirements
 
@@ -17,16 +14,16 @@ This simple tool allows you to convert a full configuration backup of a *pf*Sens
 
 **Before:** Configuration backup as XML
 
-![Configuration backup as XML](screenshots/pfFocus_xml.png)
+![Configuration backup as XML](screenshots/opnFocus_xml.png)
 
 **After:** Markdown documentation
 
-![System and Interfaces](screenshots/pfFocus_System_Interfaces.png)
-![Filter rules](screenshots/pfFocus_Filter_rules.png)
+![System and Interfaces](screenshots/opnFocus_System_Interfaces.png)
+![Filter rules](screenshots/opnFocus_Filter_rules.png)
 
 ## Features
 
-pfFocus currently supports the following configuration sections:
+opnFocus currently supports the following configuration sections:
 
 * Basic system information
 * List of interfaces, VLANs, bridges, gateways and static mappings
@@ -42,68 +39,51 @@ pfFocus currently supports the following configuration sections:
 
 Install into existing Python environment:
 ```bash
-pip install git+https://github.com/TKCERT/pfFocus.git#egg=pfFocus
+pip install git+https://github.com/TKCERT/opnFocus.git#egg=opnFocus
 ```
 
 Combine this with `--user` or `pipx` or `pipenv` for isolated installation.
 
 ## Usage
 
-Main formatting tool: ```pf-format```
+Main formatting tool: ```opn-format```
 ```bash
-pf-format
+opn-format
 ```
 
 Examples:
 ```bash
-pf-format -i config-backup.xml -f md -o test.md
-pf-format -i config-backup.xml -f yaml -o test.yaml
+opn-format -i config-backup.xml -f md -o test.md
+opn-format -i config-backup.xml -f yaml -o test.yaml
 ```
 
-Test parsing tool: ```pf-parse```
+Test parsing tool: ```opn-parse```
 ```bash
-pf-parse [-h] input_path
+opn-parse [-h] input_path
 ```
 
 Examples:
 ```bash
-pf-parse config-backup.xml
+opn-parse config-backup.xml
 ```
 
 ### Usage via Docker
 
-When using pfFocus via Docker, you don't need to download it from Github, and you don't need to install Python or any libraries. Only Docker is required.
-
-It runs this command inside Docker: `pfFocus-format -q -f md -i - -o -`, which means it works with `STDIN` and `STDOUT` instead of files.
-
-```bash
-docker run --rm -i ghcr.io/tkcert/pffocus < input.xml > output.md
-```
-
-If you want you can set up an alias for it in bash:
-
-```bash
-alias pf-format="docker run --rm -i ghcr.io/tkcert/pffocus"
-```
-
-Then you can use it like a normal Unix command, with pipes and redirects:
-
-```bash
-pf-format < input.xml > output.md
-```
+TODO
 
 ## Roadmap
 
-Some ideas for the future development of pfFocus:
+Some ideas for the future development of opnFocus:
 
 * Producing additional output formats, especially structured formats like CSV.
 * Using these structured formats to enable easy diff'ing of configurations.
 * Maybe functionality to correlate rule configurations of different firewalls.
+* Troubleshoot full features opn <> Pf
 
 ## Credits
 
 * Thomas Patzke ([@thomaspatzke](https://github.com/thomaspatzke)) for
     * valuable suggestions and feedback
 * Florian Roth ([@Cyb3rOps](https://twitter.com/Cyb3rOps)) for
-    * giving it the name *pfFocus*
+    * giving it the name *opnFocus*
     * the very nice and gorgeous logo
