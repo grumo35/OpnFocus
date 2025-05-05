@@ -85,5 +85,5 @@ Some ideas for the future development of opnFocus:
 * Thomas Patzke ([@thomaspatzke](https://github.com/thomaspatzke)) for
     * valuable suggestions and feedback
 * Florian Roth ([@Cyb3rOps](https://twitter.com/Cyb3rOps)) for
-    * giving it the name *opnFocus*
+    * giving it the name *pfFocus*
     * the very nice and gorgeous logo
