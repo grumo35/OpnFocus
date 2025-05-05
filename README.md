@@ -1,7 +1,7 @@
 ![opnFocus](logos/opn_focus.png)
 
 # OPNFocus
-Forked from https://github.com/TKCERT/opnFocus/
+Forked from https://github.com/TKCERT/pfFocus/
 This simple tool allows you to convert a full configuration backup of a *OPN*Sense firewall into some meaningful output format, like Markdown or YAML. It enables you to **focus** on the important parts of your firewall configuration and allows you to get a quick overview of the most important settings.
 
 ## Requirements
