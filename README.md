@@ -1,4 +1,4 @@
-![opnFocus](logos/opnFocus.png)
+![opnFocus](logos/opn_focus.png)
 
 # OPNFocus
 Forked from https://github.com/TKCERT/opnFocus/
